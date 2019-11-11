@@ -1,8 +1,6 @@
 import itertools
 import string
 import hashlib
-from cryptography.hazmat.backends import openssl
-from cryptography.hazmat.primitives import hashes
 import os
 import time
 def guess_passwordHash(returnline):
@@ -15,7 +13,7 @@ def guess_passwordHash(returnline):
             guess = ''.join(guess)
             def encrypt_string(hash_string):
                 sha_signature = \
-                    hashlib.SHA3_256(hash_string.encode()).hexdigest()
+                    hashlib.sha256(hash_string.encode()).hexdigest()
                 return sha_signature
             hash_string = guess
             sha_signature = encrypt_string(hash_string)
@@ -35,7 +33,7 @@ def guess_passwordHashSalt(returnline):
             guess = ''.join(guess)
             def encrypt_string(hash_string):
                 sha_signature = \
-                    hashlib.SHA3_256(hash_string.encode()).hexdigest()
+                    hashlib.sha256(hash_string.encode()).hexdigest()
                 return sha_signature
             hash_string = guess + salt
             sha_signature = encrypt_string(hash_string)
@@ -49,7 +47,7 @@ print("2.Hash with salt\n")
 user = input("Please pick an option 1 or 2: \n")
 if user == "1":
     start = time.time()
-    with open('hashedpsswrd.txt') as f:
+    with open('pass2.txt') as f:
         firstline = f.readline()
     returnline = firstline.rpartition(':')[2]
     returnline = returnline.replace('\n','')
@@ -59,7 +57,7 @@ if user == "1":
     print(end - start)
 if user == "2":
     start = time.time()
-    with open('salthashedpsswrd.txt') as f:
+    with open('pass3.txt') as f:
         firstline = f.readline()
     salt = firstline.rpartition(':')[2]
     salt = salt.replace('\n','')
