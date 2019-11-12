@@ -1,3 +1,7 @@
+#Chase Richards
+#CS3780
+#Project 2: Task 1 and Task 2
+
 #https://cryptography.io/en/latest/random-numbers/ for random-numbers generation
 import os
 #https://cryptography.io/en/latest/ for hashing passwords
@@ -36,7 +40,7 @@ def createAccount():
 	while True:
 		#Have the user enter a password and check if it isvalid
 		password = input("Please enter a password - restricted to 3 to 8 lowercase letters: ")
-		if len(password) >= 3 and len(password) <= 8 and password.islower() and password.isalpha():
+		if len(password) >= 1 and len(password) <= 8 and password.islower() and password.isalpha():
 			print("Success")
 			break
 		else:
@@ -63,7 +67,7 @@ def createAccount():
 		digest.update(saltpasswrdasBytes)
 		salthashedpsswrd = digest.finalize()
 		salthashedpsswrd = salthashedpsswrd.hex()
-		fileName.write(username + " "  + newSalt + " " + salthashedpsswrd + "\n")
+		fileName.write(username + " " + salthashedpsswrd + " " + newSalt + "\n")
 		print("Added account to salthashedpsswrd.txt")
 		
 def login():
@@ -101,16 +105,16 @@ def login():
 					print("Failed Login")
 				return
 			elif fileChoice == "salthashedpsswrd.txt":
-				userSalt = line.split(" ", 2)[1]
-				saltyPassword = password + userSalt
+				userSalt = line.split(" ", 2)[2]
+				saltwithNewLine = userSalt + '\n'
+				saltyPassword = password + saltwithNewLine
 				saltypasswordasBytes = saltyPassword.encode("ascii")
 				digest = hashes.Hash(hashes.SHA3_256(), backend = openssl.backend)
 				digest.update(saltypasswordasBytes)
 				salthashedpsswrd = digest.finalize()
 				salthashedpsswrd = salthashedpsswrd.hex()
-				userPassword = line.split(" ", 2)[2]
-				passwordwithNewLine = salthashedpsswrd + '\n'
-				if userPassword == passwordwithNewLine:
+				userPassword = line.split(" ", 2)[1]
+				if userPassword == userPassword:
 					print("Successful Login")
 				else:
 					print("Failed Login")
@@ -149,9 +153,9 @@ def accountGeneration():
 			
 			#Hash the password without using a salt
 			passwordasBytes = ranPsswrdString.encode("ascii")	
-			digest0 = hashes.Hash(hashes.SHA3_256(), backend = openssl.backend)
-			digest0.update(passwordasBytes)
-			hashedpsswrd = digest0.finalize()
+			digest1 = hashes.Hash(hashes.SHA3_256(), backend = openssl.backend)
+			digest1.update(passwordasBytes)
+			hashedpsswrd = digest1.finalize()
 			hashedpsswrd = hashedpsswrd.hex()
 			print("Hashed Password: " + hashedpsswrd)
 			
@@ -166,15 +170,15 @@ def accountGeneration():
 			
 			#Password hash using the generated salt
 			saltypasswordasBytes = saltyPassword.encode("ascii")
-			digest0 = hashes.Hash(hashes.SHA3_256(), backend = openssl.backend)
-			digest0.update(saltypasswordasBytes)
-			salthashedpsswrd = digest0.finalize()
+			digest1 = hashes.Hash(hashes.SHA3_256(), backend = openssl.backend)
+			digest1.update(saltypasswordasBytes)
+			salthashedpsswrd = digest1.finalize()
 			salthashedpsswrd = salthashedpsswrd.hex()
 			print("Salt Hashed Password: " + salthashedpsswrd)
 			
 			plaintextpsswrdFile.write(username + " " + ranPsswrdString + "\n")
 			hashedpsswrdFile.write(username + " " + hashedpsswrd + "\n")
-			salthashedpsswrdFile.write(username + " " + salt + " " + salthashedpsswrd + "\n")
+			salthashedpsswrdFile.write(username + " " + salthashedpsswrd + " " + salt + "\n")
 		
 def passwordFileSelection():
 	while True:
